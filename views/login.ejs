@@ -1,0 +1,55 @@
+
+    <%-include ('../views/partials/header.ejs')  %>
+    <form id="signup-form">
+        <h2>Log in</h2>
+
+        <label for="email">email</label>
+        <input type="text" name="email" required>
+        <div class="email-error"></div>
+
+        <label for="password">password</label>
+        <input type="password" name="password" required>
+        <div class="password-error"></div>
+
+         <button>log in</button>
+    </form>
+        
+    <script>
+        const form = document.querySelector('#signup-form');
+      
+ 
+
+        form.addEventListener('submit',  async (e) => {
+            e.preventDefault();
+
+            //RESET THE ERROR MESSAGE
+            //JUST SET IT AS AN EMPTY STRING AT FIRST
+             //get Values, This is from the error class
+        const email = form.email.value;
+        const password = form.password.value;
+        const emailError = document.querySelector('.email-error')
+        const passwordError = document.querySelector('.password-error')
+           
+        try{    
+            const res = await fetch('/login',{
+                method:"post",
+                body: JSON.stringify({email, password}),
+                headers: {"Content-Type": "application/json"}
+            })
+                const data = await res.json()
+                console.log(data)       
+                if(data.errors){
+                emailError.textContent = data.errors.email;
+                passwordError.textContent = data.errors.password;
+                }
+                if(data.user){
+                    location.assign('/')
+                }
+        }  
+        catch(err){ 
+            console.log(err)     
+        }
+                   
+        })  
+    </script>
+    <%-include ('../views/partials/footer.ejs')  %>
